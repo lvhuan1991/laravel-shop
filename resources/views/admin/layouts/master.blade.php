@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +26,18 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="{{asset('org/assets/')}}/plugins/jquery/jquery.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        $(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        })
+
+    </script>
     @stack('css')
 
 </head>
@@ -37,7 +48,8 @@
 <!-- ============================================================== -->
 <div class="preloader">
     <svg class="circular" viewBox="25 25 50 50">
-        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+    </svg>
 </div>
 <!-- ============================================================== -->
 <!-- Main wrapper - style you can find in pages.scss -->
@@ -46,15 +58,15 @@
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    @include('admin.layouts.head')
-    <!-- ============================================================== -->
+@include('admin.layouts.head')
+<!-- ============================================================== -->
     <!-- End Topbar header -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
     <!-- Left Sidebar - style you can find in sidebar.scss  -->
     <!-- ============================================================== -->
-    @include('admin.layouts.slide')
-    <!-- ============================================================== -->
+@include('admin.layouts.slide')
+<!-- ============================================================== -->
     <!-- End Left Sidebar - style you can find in sidebar.scss  -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
@@ -80,7 +92,9 @@
                     <div class="d-flex m-t-10 justify-content-end">
                         <div class="d-flex m-r-20 m-l-10 hidden-md-down">
                             <div class="chart-text m-r-10">
-                                <h6 class="m-b-0"><small>THIS MONTH</small></h6>
+                                <h6 class="m-b-0">
+                                    <small>THIS MONTH</small>
+                                </h6>
                                 <h4 class="m-t-0 text-info">$58,356</h4></div>
                             <div class="spark-chart">
                                 <div id="monthchart"></div>
@@ -88,7 +102,9 @@
                         </div>
                         <div class="d-flex m-r-20 m-l-10 hidden-md-down">
                             <div class="chart-text m-r-10">
-                                <h6 class="m-b-0"><small>LAST MONTH</small></h6>
+                                <h6 class="m-b-0">
+                                    <small>LAST MONTH</small>
+                                </h6>
                                 <h4 class="m-t-0 text-primary">$48,356</h4></div>
                             <div class="spark-chart">
                                 <div id="lastmonthchart"></div>
@@ -117,7 +133,7 @@
         <!-- ============================================================== -->
         <!-- footer -->
         <!-- ============================================================== -->
-        <footer class="footer"> © 2017 Material Pro Admin by wrappixel.com </footer>
+        <footer class="footer"> © 2017 Material Pro Admin by wrappixel.com</footer>
         <!-- ============================================================== -->
         <!-- End footer -->
         <!-- ============================================================== -->
@@ -132,7 +148,7 @@
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
-<script src="{{asset('org/assets/')}}/plugins/jquery/jquery.min.js"></script>
+
 <script src="{{asset('org/assets/')}}/plugins/bootstrap/js/popper.min.js"></script>
 <script src="{{asset('org/assets/')}}/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="{{asset('org/assets/js')}}/jquery.slimscroll.js"></script>

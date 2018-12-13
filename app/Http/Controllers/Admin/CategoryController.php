@@ -31,6 +31,7 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request,Category $category)
     {
         //Category::create($request->all());//这个相当于下面的三句，但是又问题
+        //因为没有在模型里面填写$fillable字段
         $category->name = $request->name;
         $category['pid'] = $request['pid'];
         $category->save();
@@ -46,7 +47,7 @@ class CategoryController extends Controller
 
     public function update(Request $request,Category $category)
     {
-        //Category::update($request->all());//为什么不能这样用呢？
+        //Category::update($request->all());//为什么不能这样用呢？因为没有在模型里面填写$fillable字段
         $category->name = $request->name;
         $category->pid = $request->pid;
         $category->save();

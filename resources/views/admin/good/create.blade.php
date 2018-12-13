@@ -97,44 +97,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="card">
+                        <div class="col-6" id="app">
+                            <div class="card" v-for="(v,k) in specs">
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">规格名称</label>
                                         <div class="col-md-9">
-                                            <input type="text" placeholder="14寸 64G 内存" class="form-control">
+                                            <input type="text" v-model="v.spec" placeholder="14寸 64G 内存" class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">库存</label>
                                         <div class="col-md-9">
-                                            <input type="text" placeholder="100" class="form-control">
+                                            <input type="text" v-model="v.total" placeholder="100" class="form-control">
                                         </div>
                                     </div>
-                                    <button class="btn btn-danger btn-sm pull-right" type="button">删除</button>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">规格名称</label>
-                                        <div class="col-md-9">
-                                            <input type="text" placeholder="14寸 64G 内存" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">库存</label>
-                                        <div class="col-md-9">
-                                            <input type="text" placeholder="100" class="form-control">
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-danger btn-sm pull-right" type="button">删除</button>
+                                    <button @click="del(k)" class="btn btn-danger btn-sm pull-right" type="button">删除</button>
                                 </div>
                             </div>
                             <div class="">
-                                <button type="button" class="btn btn-success">添加规格</button>
+                                <button type="button" @click="add" class="btn btn-success">添加规格</button>
                             </div>
+                            {{--<textarea name="specs" id="" cols="30" rows="10">@{{ specs }}</textarea>--}}
                         </div>
                     </div>
                     <hr>
@@ -163,9 +147,19 @@
 @push('js')
     <script src="{{asset('org/layui/layui.js')}}"></script>
     <script>
-        layui.use('upload', function(){
+        layui.use(['upload','layedit'], function(){
             var $ = layui.jquery
                 ,upload = layui.upload;
+            var layedit = layui.layedit;
+            //layui编辑器
+            layedit.build('demo', {
+                //tool: ['left', 'center', 'right', '|', 'face'],//自定义 tollbar
+                height: 280 //设置编辑器高度
+                , uploadImage: {
+                    url: "{{route('util.upload')}}",
+                    type: 'post'
+                }
+            }); //建立编辑器
 
             // //普通图片上传
             // var uploadInst = upload.render({
@@ -199,8 +193,8 @@
                 //参数选项参考：https://www.layui.com/doc/modules/upload.html
 
                 elem: '#test10'   //指向容器选择器，如：elem: '#id'。也可以是DOM对象
-                //,data: {}
-                //,headers: {}//接口的请求头。如：headers: {token: 'sasasas'}。注：该参数为 layui 2.2.6 开始新增
+                ,data: {}
+                ,headers: {}//接口的请求头。如：headers: {token: 'sasasas'}。注：该参数为 layui 2.2.6 开始新增
                 ,url: '{{route('util.upload')}}'    //服务端上传接口
                 ,size: 60000      //限制文件大小，单位 KB
                 ,accept: 'images' //{指定允许上传时校验的文件类型，可选：images（图片）、file（所有文件）、video（视频）、audio（音频）}
@@ -208,9 +202,54 @@
                 ,exts: 'jpg|png'  //允许上传的文件后缀。一般结合 accept 参数类设定
                 ,drag:true        //是否接受拖拽的文件上传，设置 false 可禁用。不支持ie8/9
                 ,done: function(res){
-                    console.log(res)
+                    //console.log(res)
+                    if (res.code == 0) {
+                        $('#test10').html('<img src="' + res.data.src + '" alt="" width="50"><input type="hidden" name="list_pic" value="' + res.data.src + '">')
+                    } else {
+                        layer.msg(res.msg, {icon: 2}, function () {
+                            //关闭后的操作
+                        });
+                    }
+                }
+            });
+            //多图上传
+            upload.render({
+                //参数选项参考：https://www.layui.com/doc/modules/upload.html
+                elem: '#test2'
+                , url: "{{route('util.upload')}}"
+                , multiple: true
+                , accept: 'images' //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
+                , acceptMime: 'image/jpg, image/png'
+                , size: 50000000000 //最大允许上传的文件大小，单位 KB。不支持ie8/9
+                , exts: 'jpg|png'
+                , done: function (res) {
+                    //上传完毕
+                    if (res.code == 0) {
+                        $('#demo2').append('<img src="' + res.data.src + '" alt="" width="50" class="layui-upload-img"><input type="hidden" name="pics[]" value="' + res.data.src + '">')
+                    } else {
+                        layer.msg(res.msg, {icon: 2}, function () {
+                            //关闭后的操作
+                        });
+                    }
                 }
             });
         });
+    </script>
+    <script src="https://cdn.bootcss.com/vue/2.5.18-beta.0/vue.min.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                specs:[]
+            },
+            methods:{
+                add(){
+                    this.specs.push({spec:'',total:''})//添加
+                },
+                del(k){
+                    this.specs.splice(k,1)//删除
+                }
+            }
+        })
     </script>
 @endpush
