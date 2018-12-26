@@ -35,7 +35,7 @@ class LoginController extends Controller
 //        return redirect()->back()->with('danger','用户名或密码不正确');
     }
     public function logout(){
-        \Auth::guard('admin')->logout();//加这句又什么用？
+        \Auth::guard('admin')->logout();//加这句又什么用？不加不知道走前台还是后台的守卫
         return redirect()->route('admin.login');
     }
 }

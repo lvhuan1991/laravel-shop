@@ -15,7 +15,8 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('login');
+            //return route('login');//系统定义的
+            return route('user.login',['from'=>url()->full()]);//我们手动修改的
         }
     }
 }

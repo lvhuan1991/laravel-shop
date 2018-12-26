@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    public static $temp = [];
+    /**
+     * 获得树状结构
+     *
+     * @param $data  数组数据
+     *
+     * @return mixed
+     */
     public function getTreeData($data)
     {
         return (new Arr())->tree($data,'name','id','pid');
@@ -39,5 +47,28 @@ class Category extends Model
             }
         }
         return $temp;
+    }
+    /**
+     * 递归找父级
+     *
+     * @param $data
+     * @param $id
+     */
+    public function getFacher ( $data , $id )
+    {
+        static $temp = [];
+        foreach ( $data as $v )
+        {
+            if ( $v['id'] == $id )
+            {
+                $temp[] = $v;
+                $this->getFacher ( $data , $v['pid'] );
+            }
+        }
+
+        return $temp;
+    }
+    public function good(){
+        return $this->hasMany(Good::class);
     }
 }

@@ -15,9 +15,9 @@ class AdminAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        //验证如果不是登录后台就返回登录页面
-        if(!auth()->check()){
-            return redirect()->route('admin.login');
+        //验证如果没有登录、就返回登录页面
+        if(!auth('admin')->check()){
+            return redirect()->route('admin.login')->with('success','请先登录');
         }
         return $next($request);
     }

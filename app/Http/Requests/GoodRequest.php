@@ -13,7 +13,7 @@ class GoodRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth('admin')->check();
     }
 
     /**
@@ -23,8 +23,20 @@ class GoodRequest extends FormRequest
      */
     public function rules()
     {
+        //$id = $this->route('good') ? $this->route('good')->id : null;
         return [
-            //
+            'title'=>'required',
+            'list_pic'=>'required',
+            'price'=>'required',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'title.required'=>'文章标题不能为空',
+            'list_pic.required'=>'图片不能为空',
+            'list_pic.unique'=>'图片已存在',
+            'price.required'=>'请输入金额',
         ];
     }
 }

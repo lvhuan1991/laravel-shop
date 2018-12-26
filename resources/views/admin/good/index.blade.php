@@ -23,8 +23,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('admin.good.create')}}" >
-                            <span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">添加商品</span>
+                        <a class="nav-link" href="{{route('admin.good.create')}}">
+                            <span class="hidden-sm-up"><i class="ti-user"></i></span> <span
+                                class="hidden-xs-down">添加商品</span>
                         </a>
                     </li>
                 </ul>
@@ -45,18 +46,27 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>@Genelia</td>
-                                    <td>@Genelia</td>
-                                    <td>@Genelia</td>
-                                    <td>@Genelia</td>
-                                    <td>@Genelia</td>
-                                    <td >
-                                        <a href="#" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                        <a href="#" data-toggle="tooltip" data-original-title="Close"> <i class="fa fa-close text-danger"></i> </a>
-                                    </td>
-                                </tr>
+                                @foreach($goods as $good)
+                                    <tr>
+                                        <td>{{$good->id}}</td>
+                                        <td>{{$good->title}}</td>
+                                        <td><img src="{{$good->list_pic}}" alt=""></td>
+                                        <td>{{$good->price}}</td>
+                                        <td>{{$good->category_id}}</td>
+                                        <td>{{$good['created_at']}}</td>
+                                        <td>
+                                            <a href="{{route('admin.good.edit',$good)}}" data-toggle="tooltip"
+                                               data-original-title="Edit"> <i
+                                                    class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                            <a href="javascript:;" onclick="del(this)" data-toggle="tooltip" data-original-title="Close"> <i
+                                                    class="fa fa-close text-danger"></i> </a>
+                                            <form action="{{route('admin.good.destroy',$good)}}"
+                                                  method="post">
+                                                @csrf @method('DELETE')
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -67,3 +77,26 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script>
+        function del(obj) {
+            swal("确定删除吗?", {
+                buttons: {
+                    cancel: "取消",
+                    catch: {
+                        text: "确定",
+                        value: "catch",
+                    },
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+                        case "catch":
+                            $(obj).next('form').submit();
+                            break;
+                        default:
+                    }
+                });
+        }
+    </script>
+@endpush
