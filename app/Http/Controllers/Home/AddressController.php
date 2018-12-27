@@ -26,9 +26,11 @@ class AddressController extends CommonController
         return view('home.address.index',compact('addresses'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('home.address.create');
+//        dd($request->all());
+        $from = $request->from;
+        return view('home.address.create',compact('from'));
     }
 
     public function store(AddressRequest $request,Address $address)
@@ -43,8 +45,13 @@ class AddressController extends CommonController
         if($request->is_default){
             Address::where('user_id',auth()->id())->where('id','!=',$address['id'])->update(['is_default'=>0]);
         }
+        //dd($request->from);
+        if($request->from){
 
-        return redirect()->route('home.address.index')->with('success','添加成功');
+            return redirect($request->from)->with('success','登录成功');
+        }else{
+            return redirect()->route('home.address.index')->with('success','添加成功');
+        }
     }
 
     public function show(Address $address)
@@ -52,18 +59,28 @@ class AddressController extends CommonController
         //
     }
 
-    public function edit(Address $address)
+    public function edit(Address $address,Request $request)
     {
-        //
+        $from = $request->from;
+        return view('home.address.edit',compact('address','from'));
     }
 
     public function update(AddressRequest $request, Address $address)
     {
-        //
+        //dd($request->all());
+        $address->update($request->all());
+        if($request->from){
+            return redirect($request->from)->with('success','登录成功');
+        }else{
+            return redirect()->route('home.address.index')->with('success','修改成功');
+        }
+
     }
 
     public function destroy(Address $address)
     {
-        //
+        //dd($address);
+        $address->delete();
+        return back()->with('success','删除成功');
     }
 }

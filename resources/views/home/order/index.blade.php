@@ -23,12 +23,12 @@
                                 <span class="city-particular">{{$address['detail']}}</span>，
                                 <span class="codeNumber">{{$address['phone']}}</span>
                             </label>
-                            <span class="compile"><a class="copyreader" href="javascript:;">编辑</a></span>
+                            <span class="compile"><a class="copyreader" href="{{route('home.address.edit',[$address,'from'=>url()->full()])}}">编辑</a></span>
                         </div>
                     @endforeach
                 @else
                     <div style="padding: 10px;text-align: center">
-                        您还没有添加地址,请先 <a href="{{route('home.address.create')}}" style="">添加地址</a>
+                        您还没有添加地址,请先 <a href="{{route('home.address.create',['from'=>url()->full()])}}" style="">添加地址</a>
                     </div>
                 @endif
 

@@ -9,8 +9,8 @@
                     <div style="padding: 30px">
                         <table class="layui-table" lay-size="sm">
                             <colgroup>
-                                <col >
-                                <col >
+                                <col>
+                                <col>
                                 <col>
                             </colgroup>
                             <thead>
@@ -38,8 +38,14 @@
                                                 <a href="" class="layui-btn layui-btn-primary layui-btn-sm">设为默认</a>
 
                                             @endif
-                                            <a href="" class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon"></i></a>
-                                            <button class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon"></i></button>
+                                            <a href="{{route('home.address.edit',$address)}}"
+                                               class="layui-btn layui-btn-primary layui-btn-sm"><i
+                                                    class="layui-icon"></i></a>
+                                            <button onclick="del(this)"  class="layui-btn layui-btn-primary layui-btn-sm">
+                                                <i class="layui-icon"></i></button>
+                                                <form method="post" action="{{route('home.address.destroy',$address)}}">
+                                                    @csrf @method('DELETE')
+                                                </form>
                                         </div>
 
                                     </td>
@@ -93,6 +99,28 @@
                 form.render();
             })
         });
+
+
+        function del(obj) {
+            swal("确定删除吗?", {
+                buttons: {
+                    cancel: "取消",
+                    catch: {
+                        text: "确定",
+                        value: "catch",
+                    },
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+                        case "catch":
+                            $(obj).next('form').submit();
+                            break;
+                        default:
+                    }
+                });
+        }
+
 
     </script>
 @endpush

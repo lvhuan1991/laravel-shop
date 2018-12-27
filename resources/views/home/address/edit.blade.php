@@ -5,10 +5,10 @@
             @include('home.personal_center.layouts.slider')
             <div class="orderright">
                 <div class="orderlist">
-                    <h2>添加地址</h2>
+                    <h2>修改地址</h2>
                     <div style="padding: 30px">
-                        <form method="post" class="layui-form" action="{{route('home.address.store',['from'=>$from])}}">
-                            @csrf
+                        <form method="post" class="layui-form" action="{{route('home.address.update',[$address,'from'=>$from])}}">
+                            @csrf  @method('PUT')
                             <div class="layui-form-item">
                                 <label class="layui-form-label">收货人姓名</label>
                                 <div class="layui-input-block">
